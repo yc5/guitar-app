@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>吉風樂器行教學</title>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/index.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+</head>
+<body>
+<div id="app-1">
+
+<!-- app-1 finish in c2 -->
+<!-- <div class="jump_finish">
+  <h1>恭喜你完成本單元</h1>
+  <p><a href="https://drive.google.com/file/d/1y9umQAGCMK7ONkjgd-lw8mFf3-HbeNK0/view">詳解點此</a></p>
+  <p><a href="index.html">回首頁</a></p>
+</div> -->
+
+<div class="bingo">
+  <!-- <div class="title">答對了</div> -->
+</div>
+<div class="fail">
+  <!-- <div class="title">答錯</div> -->
+</div>
+
+<div class="arrow">
+  <img src="img/arrow.png" alt="">
+</div>
+<h1 class="text_nth"></h1>
+<p class="description"></p>
+<div class="options"></div>
+</div><!-- app-1 -->
+
+<script>
+var current_question = 0;
+var questions = [
+  {
+    "nth":"第一題",
+    "description":"通常歌手在自彈自唱的時候會使用來伴奏的吉他為何種類型？",
+    "answer":1,
+    "op":["電吉他","木吉他","古典吉他"]
+  },
+  {
+    "nth":"第二題",
+    "description":"木吉他本體由三塊木板組成，但不包含哪一塊木板？",
+    "answer":1,
+    "op":["面板","平板","側板","背板"]
+  },
+  {
+    "nth":"第三題",
+    "description":"六弦吉他通常的調音順序為？ （由第六條到第一條）",
+    "answer":0,
+    "op":["EADGBE","EADGBA","EADGBA","EBFDAE"]
+  },
+  {
+    "nth":"第四題",
+    "description":"彈奏電吉他主要需要的配備有三樣，但不包含以下哪一樣？",
+    "answer":3,
+    "op":["電吉他","效果器","音箱","電線"]
+  },
+  {
+    "nth":"第五題",
+    "description":"俗稱的面單吉他是指木吉他的哪一塊木板為單板？",
+    "answer":0,
+    "op":["面板","側板","背板"]
+  },
+]
+
+jQuery(document).ready(function(){
+  $(".bingo").hide();
+  $(".fail").hide();
+  $(".jump_finish").hide();
+  render_content();
+});
+
+
+
+function render_content(){
+  // Finish the chapter
+  if(current_question==questions.length){
+    window.location = "./c2";
+    // $(".jump_finish").slideDown();
+  }
+  // Change question
+  $(".arrow").removeClass("shoot");
+  // Let arrow move with cursor
+  $(document).mousemove(function detectmouse(event){
+    var a =  event.pageX-window.innerWidth/2;
+    $("div.arrow").css("transform", "translateX(" + a +"px)");
+  });
+
+  var q = questions[current_question];
+  $(".text_nth").text(q.nth);
+  $(".description").text(q.description);
+  $(".options").html("");
+  
+  // 
+  $.each( q.op, function( index, value ) {
+    $(".options").append("<div class='op' data-index='"+index+"'>"+value+"</div>");
+  });
+  $(".op").click(function(event){
+    $(this).css('pointer-events', 'none'); // Prevent double click
+    var i = $(event.target).data("index");
+    console.log(i);
+    shoot();
+    $(document).unbind("mousemove");
+    if( i == q.answer ){
+      show_bingo();
+    }else{
+      show_fail();
+    }
+    current_question++;
+    setTimeout(render_content, 3000);
+  });
+}
+
+function show_bingo(){
+  $(".bingo").delay(1000).slideDown();
+  $(".bingo").delay(2000).slideUp(); 
+}
+function show_fail(){
+  $(".fail").delay(1000).slideDown();
+  $(".fail").delay(2000).slideUp(); 
+}
+
+function shoot(){
+  $("div.arrow").addClass("shoot");
+}
+</script>
+</body>
+</html>

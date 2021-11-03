@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>吉風樂器行教學</title>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/index.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+</head>
+<body>
+<div id="app-2">
+<div class="bingo">
+  <div class="title">答對了</div>
+</div>
+<div class="fail">
+  <div class="title">答錯</div>
+</div>
+
+<div class="arrow">
+  <img src="img/picker.svg" alt="">
+</div>
+
+<h1 class="text_nth"></h1>
+<p class="description">一哥道？國一升自性說題回灣失喜，近看張發面文當公車哥過怎覺。小性廠讀得他萬甚止樣童港輕地斯，海的。</p>
+<div class="options"></div>
+</div><!-- app-1 -->
+
+<script>
+var current_question = 0;
+var questions = [
+  {
+    "nth":"第一題",
+    "description":"音程關係中哪兩個音之間為半音程關係？",
+    "answer":0,
+    "op":["Mi和Fa","Do和Re","Re和Mi","Fa和Sol"]
+  },
+  {
+    "nth":"第二題",
+    "description":"音程關係中哪兩個音之間為半音程關係？",
+    "answer":1,
+    "op":["Do和Re","Si和Do","Fa和Sol","Re和Mi"]
+  },
+  {
+    "nth":"第三題",
+    "description":"簡譜上看到533轉換成唱名應該是？",
+    "answer":1,
+    "op":["Do Re Re","Sol Mi Mi","Fa Sol Sol","Re Mi Mi"]
+  },
+  {
+    "nth":"第四題",
+    "description":"彈奏吉他前三格時，食指主要負責第幾格的按弦？",
+    "answer":0,
+    "op":["第一格","第二格","第三格","第四格"]
+  },
+  {
+    "nth":"第五題",
+    "description":"在指法彈奏時，右手食指主要負責第幾條弦的撥弦？",
+    "answer":2,
+    "op":["第一條","第二條","第三條","第四條"]
+  },
+]
+
+jQuery(document).ready(function(){
+  $(".bingo").hide();
+  $(".fail").hide();
+  render_content();
+});
+
+
+
+function render_content(){
+  if(current_question==questions.length){
+    window.location = "./index.html";
+  }
+
+  // Change question
+  $(".arrow").removeClass("shoot");
+  // Let arrow move with cursor
+  $(document).mousemove(function detectmouse(event){
+    var a =  event.pageX-window.innerWidth/2;
+    $("div.arrow").css("transform", "translateX(" + a +"px)");
+  });
+
+  var q = questions[current_question];
+  $(".text_nth").text(q.nth);
+  $(".description").text(q.description);
+  $(".options").html("");
+  $.each( q.op, function( index, value ) {
+    $(".options").append("<div class='op' data-index='"+index+"'>"+value+"</div>");
+  });
+  $(".op").click(function(event){
+    var i = $(event.target).data("index");
+    console.log(i);
+    shoot();
+    $(document).unbind("mousemove");
+    if( i == q.answer ){
+      setTimeout(show_bingo, 2000);
+    }else{
+      setTimeout(show_fail, 2000);
+    }
+    current_question++;
+    setTimeout(render_content, 3500);
+    // $(".arrow").css("bottom", "-10px");
+
+  });
+}
+
+function show_bingo(){
+  $(".bingo").delay(1000).slideDown();
+  $(".bingo").delay(2000).slideUp(); 
+}
+function show_fail(){
+  $(".fail").delay(1000).slideDown();
+  $(".fail").delay(2000).slideUp(); 
+}
+
+function shoot(){
+  $("div.arrow").addClass("shoot");
+}
+
+
+
+
+</script>
+</body>
+</html>

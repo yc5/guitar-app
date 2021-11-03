@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="bull" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 313 187" style="enable-background:new 0 0 313 187;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#231C1C;stroke:#FFFFFF;stroke-miterlimit:10;}
+	.st1{fill:#FFFFFF;stroke:#231C1C;stroke-miterlimit:10;}
+</style>
+<g>
+	<path class="st0" d="M0.5,0.5h48l28,10l14,2l2-12h93c90,2,127,93,127,93c-35,85-120,88-120,88l-100,5l-7-7v-7l-10-1l-23,15h-52V0.5
+		z"/>
+	<polygon class="st0" points="7.5,8 7.5,179 47.5,179 73.5,162 90.5,161 90.5,22 72.5,19 49,8 	"/>
+	<polygon class="st0" points="104.2,8 97.2,22 97.2,156.6 104.2,174 	"/>
+	<path class="st0" d="M111.7,8l0,166h92.8c0,0,88-23.7,98-80.5c0,0-18-56.2-104-85.5H111.7z"/>
+	<path class="st1" d="M224.4,47.6l51,27c0,0-33,28-46,8c0,0-13-19-9-35"/>
+	<path class="st0" d="M258.5,68.7c0,4.3-4.9,7.8-11,7.8c-6.1,0-11-3.5-11-7.8c0-4.3,4.9-7.8,11-7.8
+		C253.6,60.9,258.5,64.4,258.5,68.7z"/>
+	<path class="st1" d="M277.4,135.1l-77-38.1c0,0-10.9,16,0,32C211.3,145.1,230.5,165.2,277.4,135.1z"/>
+	<polygon class="st0" points="200.4,97.1 204.3,116.1 219.6,106.6 219.6,123.9 236.5,114.9 236.5,131.1 254.6,123.9 254.6,136.1 
+		277.4,135.1 	"/>
+	<path class="st0" d="M200.4,129.1l9.9-12.5v19.5l16-12.2v16.2l17-4v13.8C243.3,149.9,213.6,154.1,200.4,129.1z"/>
+</g>
+</svg>

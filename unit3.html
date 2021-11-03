@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>吉風樂器行教學</title>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/index.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+</head>
+<body>
+<div id="app-3">
+<div class="jump_finish">
+  <h1>恭喜你完成本單元</h1>
+  <p><a href="index.html">回首頁</a></p>
+  <p><a href="https://drive.google.com/file/d/1M6D-3WLDjb5LZ2d9O42ICEFHZPW8mXit/view">詳解點此</a></p>
+</div>
+
+<div class="bingo">
+  <!-- <div class="title">答對了</div> -->
+</div>
+<div class="fail">
+  <!-- <div class="title">答錯</div> -->
+</div>
+
+<div class="bullet">
+  <img src="img/bull.svg" alt="" width="90">  
+</div>
+<div class="arrow">
+  <img src="img/gun.svg" alt="">
+</div>
+
+<h1 class="text_nth"></h1>
+<p class="description"></p>
+<div class="options"></div>
+<form action="" class="form_fills">
+  <div class="fills"> </div>
+  <button type="submit">送出</button>
+</form>
+</div><!-- app-2 -->
+
+<script>
+var current_question = 0;
+var fills_bingo_amount = [];
+var gunY = 0;
+var questions = [
+  {
+    "type":"choose",
+    "nth":"第一題",
+    "description":"創作歌曲時需放開羞怯感大膽的去哼，才能避免旋律平淡",
+    "answer":0,
+    "op":["True","False"]
+  },
+  {
+    "type":"choose",
+    "nth":"第二題",
+    "description":"唱名La，簡譜上為6，且音名為Ａ",
+    "answer":0,
+    "op":["True","False"]
+  },
+  {
+    "type":"choose",
+    "nth":"第三題",
+    "description":"簡譜為3，唱名為Mi，音名為Ｃ",
+    "answer":1,
+    "op":["True","False"]
+  },
+  {
+    "type":"choose",
+    "nth":"第四題",
+    "description":"彈奏時如需升降歌曲的Key，可以使用移調夾來轉調",
+    "answer":0,
+    "op":["True","False"]
+  },
+  {
+    "type":"choose",
+    "nth":"第五題",
+    "description":"在彈奏吉他時應該隨時注意琴頭盡量往下壓低，會比較好彈奏",
+    "answer":1,
+    "op":["True","False"]
+  },
+  {
+    "type":"choose",
+    "nth":"第六題",
+    "description":"音符Fa和Sol之間為半音程關係",
+    "answer":1,
+    "op":["True","False"]
+  },
+{
+    "type":"choose",
+    "nth":"第七題",
+    "description":" 吉他上的拾音器，功能相當於主唱使用的麥克風，吸收弦的聲音並傳導至音箱",
+    "answer":0,
+    "op":["True","False"]
+  },
+  {
+    "type":"choose",
+    "nth":"第八題",
+    "description":"彈奏吉他前不用使用調音器，只要彈法是正確的，聲音就會是好聽的",
+    "answer":1,
+    "op":["True","False"]
+  },
+  {
+    "type":"choose",
+    "nth":"第九題",
+    "description":"買吉他一定要在實體店面彈彈看，選擇合適手感及音色的吉他，才比較有保障",
+    "answer":0,
+    "op":["True","False"]
+  },
+  {
+    "type":"choose",
+    "nth":"第十題",
+    "description":"左手手指在按壓和弦的時候需要拱起來，避免碰觸到鄰近不該按壓的弦",
+    "answer":0,
+    "op":["True","False"]
+  },
+]
+
+jQuery(document).ready(function(){
+  $(".bingo").hide();
+  $(".fail").hide();
+  $(".jump_finish").hide();
+  render_content();
+});
+
+
+
+function render_content(){
+  // Finish the chapter
+  if(current_question==questions.length){
+    // window.location = "./index.html";
+    $(".jump_finish").slideDown();
+  }
+
+  // Change question
+  $(".bullet").removeClass("shoot");
+  // Let arrow move with cursor
+  $(document).mousemove(function detectmouse(event){
+    // var a =  event.pageY-window.innerHeight/2;
+    var a =  event.pageY;
+    $("div.arrow").css("transform", "translateY(" + a +"px)");
+    $("div.bullet").css("transform", "translateY(" + a +"px)");
+    gunY = a ;
+  });
+
+  var q = questions[current_question];
+  $(".text_nth").text(q.nth);
+  $(".description").text(q.description);
+  $(".options").html("");
+  if(q.type=="choose"){
+    $(".form_fills").hide();
+    $.each( q.op, function( index, value ) {
+      $(".options").append("<div class='op' data-index='"+index+"'>"+value+"</div>");
+    });
+    $(".op").click(function(event){
+      $(this).css('pointer-events', 'none'); // Prevent double click
+      var i = $(event.target).data("index");
+      console.log(i);
+      shoot();
+      $(document).unbind("mousemove");
+      if( i == q.answer ){
+        setTimeout(show_bingo, 2000);
+      }else{
+        setTimeout(show_fail, 2000);
+      }
+      current_question++;
+      setTimeout(render_content, 3500);
+    });    
+  }else if(q.type=="fill"){
+    $(".options").remove();
+    $(".arrow").remove();
+    $(".form_fills").show();
+    $.each( q.q, function( index, value ) {
+      $(".fills").append(
+        "<div class='fill' data-index='"+
+        index+
+        "'><div class='question'>"+
+        value.question+
+        "<input type='text'></div> </div>");
+    });
+    $("input").keydown(function(){
+      var i = $(this).parent().parent().data('index');
+      var v = $(this).val().toLowerCase();
+      if( v != q.q[i].answer ){
+        $(this).addClass("false");
+        console.log(v + " != " + q.q[i].answer);
+        fills_bingo_amount[i] = false;
+      }else{
+        fills_bingo_amount[i] = true;
+        $(this).removeClass("false");
+      }
+    });
+    $("form.form_fills").submit(function(e){
+      var i = 0;
+      e.preventDefault();
+      fills_bingo_amount.forEach(function(item, index, array){
+        if(item === true) i++;
+      });
+      if(i == q.q.length){
+        show_bingo();
+        $(".jump_finish").delay(3000).slideDown();
+      }else{
+        show_fail();
+      }
+    });
+  }
+}
+
+function show_bingo(){
+  $(".bingo").slideDown();
+  $(".bingo").delay(2000).slideUp(); 
+}
+function show_fail(){
+  $(".fail").slideDown();
+  $(".fail").delay(2000).slideUp(); 
+}
+
+function shoot(){
+  $("div.bullet").addClass("shoot");
+}
+
+
+
+
+</script>
+</body>
+</html>

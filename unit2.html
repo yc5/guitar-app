@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>吉風樂器行教學</title>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/index.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+</head>
+<body>
+<div id="app-2">
+<div class="jump_finish">
+  <h1>恭喜你完成本單元</h1>
+  <p><a href="index.html">https://drive.google.com/file/d/1hgtbnkGg-Qo1FYoY1huRWXO27rfg6qMZ/view</a></p>
+  <p><a href="index.html">回首頁</a></p>
+</div>
+
+<div class="bingo">
+  <!-- <div class="title">答對了</div> -->
+</div>
+<div class="fail">
+  <!-- <div class="title">答錯</div> -->
+</div>
+
+<div class="arrow">
+  <img src="img/picker.svg" alt="">
+</div>
+
+<h1 class="text_nth"></h1>
+<p class="description"></p>
+<div class="options"></div>
+<form action="" class="form_fills">
+  <div class="fills"> </div>
+  <button type="submit">送出</button>
+</form>
+</div><!-- app-2 -->
+
+<script>
+var current_question = 0;
+var fills_bingo_amount = [];
+var questions = [
+  {
+    "type":"choose",
+    "nth":"第一題",
+    "description":"音程關係中哪兩個音之間為半音程關係？",
+    "answer":0,
+    "op":["Mi和Fa","Do和Re","Re和Mi","Fa和Sol"]
+  },
+  {
+    "type":"choose",
+    "nth":"第二題",
+    "description":"音程關係中哪兩個音之間為半音程關係？",
+    "answer":1,
+    "op":["Do和Re","Si和Do","Fa和Sol","Re和Mi"]
+  },
+  {
+    "type":"choose",
+    "nth":"第三題",
+    "description":"簡譜上看到533轉換成唱名應該是？",
+    "answer":1,
+    "op":["Do Re Re","Sol Mi Mi","Fa Sol Sol","Re Mi Mi"]
+  },
+  {
+    "type":"choose",
+    "nth":"第四題",
+    "description":"彈奏吉他前三格時，食指主要負責第幾格的按弦？",
+    "answer":0,
+    "op":["第一格","第二格","第三格","第四格"]
+  },
+  {
+    "type":"choose",
+    "nth":"第五題",
+    "description":"在指法彈奏時，右手食指主要負責第幾條弦的撥弦？",
+    "answer":2,
+    "op":["第一條","第二條","第三條","第四條"]
+  },
+  {
+    "type":"fill",
+    "nth":"第六題",
+    "description":"音名、唱名及簡譜轉換",
+    "q":[
+      {
+        "question":"音名C，唱名為",
+        "answer":"do"
+      },
+      {
+        "question":"唱名Mi，音名為",
+        "answer":"3"
+      },
+      {
+        "question":"簡譜3，唱名為",
+        "answer":"mi"
+      },
+      {
+        "question":"音名A，簡譜為",
+        "answer":"6"
+      },
+      {
+        "question":"唱名Si，音名為",
+        "answer":"b"
+      },
+    ]
+  }
+]
+
+jQuery(document).ready(function(){
+  $(".bingo").hide();
+  $(".fail").hide();
+  $(".jump_finish").hide();
+  render_content();
+});
+
+
+
+function render_content(){
+  // Finish the chapter
+  if(current_question==questions.length){
+    // window.location = "./index.html";
+    $(".jump_finish").slideDown();
+  }
+
+  // Change question
+  $(".arrow").removeClass("shoot");
+  // Let arrow move with cursor
+  $(document).mousemove(function detectmouse(event){
+    var a =  event.pageX-window.innerWidth/2;
+    $("div.arrow").css("transform", "translateX(" + a +"px)");
+  });
+
+  var q = questions[current_question];
+  $(".text_nth").text(q.nth);
+  $(".description").text(q.description);
+  $(".options").html("");
+  if(q.type=="choose"){
+    $(".form_fills").hide();
+    $.each( q.op, function( index, value ) {
+      $(".options").append("<div class='op' data-index='"+index+"'>"+value+"</div>");
+    });
+    $(".op").click(function(event){
+      $(this).css('pointer-events', 'none'); // Prevent double click
+      var i = $(event.target).data("index");
+      console.log(i);
+      shoot();
+      $(document).unbind("mousemove");
+      if( i == q.answer ){
+        setTimeout(show_bingo, 2000);
+      }else{
+        setTimeout(show_fail, 2000);
+      }
+      current_question++;
+      setTimeout(render_content, 3500);
+    });    
+  }else if(q.type=="fill"){
+    $(".options").remove();
+    $(".arrow").remove();
+    $(".form_fills").show();
+    $.each( q.q, function( index, value ) {
+      $(".fills").append(
+        "<div class='fill' data-index='"+
+        index+
+        "'><div class='question'>"+
+        value.question+
+        "<input type='text'></div> </div>");
+    });
+    $("input").keydown(function(){
+      var i = $(this).parent().parent().data('index');
+      var v = $(this).val().toLowerCase();
+      if( v != q.q[i].answer ){
+        $(this).addClass("false");
+        console.log(v + " != " + q.q[i].answer);
+        fills_bingo_amount[i] = false;
+      }else{
+        fills_bingo_amount[i] = true;
+        $(this).removeClass("false");
+      }
+    });
+    $("form.form_fills").submit(function(e){
+      var i = 0;
+      e.preventDefault();
+      fills_bingo_amount.forEach(function(item, index, array){
+        if(item === true) i++;
+      });
+      if(i == q.q.length){
+        show_bingo();
+        $(".jump_finish").delay(3000).slideDown();
+      }else{
+        show_fail();
+      }
+    });
+  }
+}
+
+function show_bingo(){
+  $(".bingo").slideDown();
+  $(".bingo").delay(2000).slideUp(); 
+}
+function show_fail(){
+  $(".fail").slideDown();
+  $(".fail").delay(2000).slideUp(); 
+}
+
+function shoot(){
+  $("div.arrow").addClass("shoot");
+}
+
+
+
+
+</script>
+</body>
+</html>
